@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE ANNIVERSARY ZENITH // 22 FEB 2024</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #030305;
+            --crimson-core: #c9182b;
+            --crimson-deep: #4a070e;
+            --crimson-glow: rgba(201, 24, 43, 0.45);
+            --card-glass: rgba(14, 5, 8, 0.78);
+            --border-crimson: 1px solid rgba(201, 24, 43, 0.35);
+            --text-pure: #ffffff;
+            --text-dim: #9e8d90;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            /* DEEP SPACE HYDROGEN-ALPHA NEBULA BACKGROUND */
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(138, 11, 23, 0.35) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(74, 7, 14, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, #030305 0%, #000000 100%);
+            background-attachment: fixed;
+            color: var(--text-pure);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 28px 16px 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .back-link {
+            color: var(--crimson-core);
+            text-decoration: none;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            font-family: 'Cinzel', serif;
+            display: inline-block;
+            transition: opacity 0.2s;
+        }
+
+        .header-panel {
+            text-align: center;
+            border-bottom: var(--border-crimson);
+            padding-bottom: 18px;
+        }
+
+        .header-panel .eyebrow {
+            font-family: 'Cinzel', serif;
+            font-size: 0.68rem;
+            letter-spacing: 3.5px;
+            color: var(--crimson-core);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .header-panel h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px var(--crimson-glow);
+        }
+
+        .header-panel p {
+            font-size: 0.74rem;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+        }
+
+        /* PHOTOREALISTIC CELESTIAL LENS */
+        .lens-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--crimson-core), #180306 40%, var(--crimson-deep) 100%);
+            box-shadow: 
+                0 0 50px rgba(201, 24, 43, 0.35),
+                inset 0 0 30px rgba(0, 0, 0, 0.95);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #020204;
+            display: block;
+            touch-action: none;
+            cursor: grab;
+        }
+
+        .reticle-hud {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 1px dashed rgba(201, 24, 43, 0.2);
+            pointer-events: none;
+        }
+
+        .reticle-hud::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid rgba(201, 24, 43, 0.4);
+        }
+
+        /* TELEMETRY CARD */
+        .telemetry-card {
+            background: var(--card-glass);
+            border: var(--border-crimson);
+            border-radius: 14px;
+            padding: 24px 20px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .telemetry-tag {
+            font-family: 'Cinzel', serif;
+            font-size: 0.68rem;
+            letter-spacing: 2.5px;
+            color: var(--crimson-core);
+            margin-bottom: 4px;
+        }
+
+        .telemetry-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.45rem;
+            color: #ffffff;
+            margin-bottom: 4px;
+            letter-spacing: 1.5px;
+        }
+
+        .telemetry-coords {
+            font-size: 0.73rem;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            font-family: 'Cinzel', serif;
+            margin-bottom: 16px;
+        }
+
+        .telemetry-divider {
+            width: 45px;
+            height: 1px;
+            background: var(--crimson-core);
+            margin: 0 auto 16px;
+            box-shadow: 0 0 8px var(--crimson-core);
+        }
+
+        .telemetry-desc {
+            font-size: 0.86rem;
+            color: #e2d9db;
+            line-height: 1.75;
+            font-style: italic;
+        }
+
+        .spectral-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Cinzel', serif;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-sirius { background: #b8dcff; box-shadow: 0 0 8px #90c7ff; }
+        .dot-betelgeuse { background: #ff5233; box-shadow: 0 0 8px #ff3b19; }
+        .dot-gemini { background: #ffdfa3; box-shadow: 0 0 8px #ffc966; }
+        .dot-nebula { background: #c9182b; box-shadow: 0 0 8px #c9182b; }
+
+        .hint {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-align: center;
+            margin-top: -6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-link">← RETURN TO VAULT</a>
+
+    <header class="header-panel">
+        <div class="eyebrow">THE SINGULAR CONVERGENCE</div>
+        <h1>The Anniversary Sky</h1>
+        <p>HUBLI, KARNATAKA // 22 FEBRUARY 2024</p>
+    </header>
+
+    <div class="lens-frame">
+        <canvas id="skyCanvas"></canvas>
+        <div class="reticle-hud"></div>
+    </div>
+    <div class="hint">DRAG TO PAN OPTICAL PERSPECTIVE</div>
+
+    <section class="telemetry-card">
+        <div class="telemetry-tag">ZENITH ALIGNMENT // DEEP FIELD CAPTURE</div>
+        <div class="telemetry-title">February 22, 2024</div>
+        <div class="telemetry-coords">15° 20' 52" N, 75° 08' 02" E // 22:00:00 IST</div>
+
+        <div class="telemetry-divider"></div>
+
+        <p class="telemetry-desc">
+            "Over the very ground where two separate lives began in 2010, the cosmos reached exact alignment fourteen years later. 
+            Gemini crowned the zenith, the crimson ember of Betelgeuse anchored the western meridian, and Sirius burned with absolute brilliance—locking our collision into history."
+        </p>
+
+        <div class="spectral-legend">
+            <div class="legend-item"><span class="dot dot-sirius"></span><span>SIRIUS (A-CLASS BLUE)</span></div>
+            <div class="legend-item"><span class="dot dot-betelgeuse"></span><span>BETELGEUSE (M-SUPERGIANT)</span></div>
+            <div class="legend-item"><span class="dot dot-gemini"></span><span>CASTOR & POLLUX (ZENITH)</span></div>
+            <div class="legend-item"><span class="dot dot-nebula"></span><span>H-ALPHA EMISSION CLOUDS</span></div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const canvas = document.getElementById('skyCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let offsetX = 0, offsetY = 0;
+    let targetX = 0, targetY = 0;
+    let isDragging = false;
+    let startX = 0, startY = 0;
+
+    function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        width = canvas.offsetWidth;
+        height = canvas.offsetHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resize);
+
+    // 1. GENERATE DEEP VOLUMETRIC H-ALPHA NEBULA CLOUDS
+    const nebulaClouds = [];
+    for (let i = 0; i < 9; i++) {
+        nebulaClouds.push({
+            x: (Math.random() * 0.7 + 0.15),
+            y: (Math.random() * 0.7 + 0.15),
+            radius: Math.random() * 120 + 80,
+            color: Math.random() > 0.4 ? 'rgba(180, 18, 38, ' : 'rgba(90, 8, 16, ',
+            alpha: Math.random() * 0.14 + 0.08
+        });
+    }
+
+    // 2. REALISTIC BACKGROUND STARFIELD (Logarithmic magnitude)
+    const bgStars = [];
+    for (let i = 0; i < 280; i++) {
+        bgStars.push({
+            x: Math.random(),
+            y: Math.random(),
+            r: Math.random() < 0.85 ? (Math.random() * 0.8 + 0.3) : (Math.random() * 1.3 + 0.9),
+            alpha: Math.random() * 0.7 + 0.25,
+            twinkleSpeed: Math.random() * 0.03 + 0.008,
+            twinklePhase: Math.random() * Math.PI * 2
+        });
+    }
+
+    // 3. ASTRONOMICALLY ACCURATE STELLAR TARGETS (Feb 22, 2024 // Hubli 22:00)
+    // Coordinated around Zenith (Gemini at top center, Winter Triangle in SW quadrant)
+    const keyStars = [
+        // GEMINI (The Zenith Twins) - Golden/Warm White
+        { id: 'pollux', name: 'Pollux', x: 0.47, y: 0.24, r: 3.8, color: '#ffd699', glow: 'rgba(255, 214, 153, 0.4)' },
+        { id: 'castor', name: 'Castor', x: 0.54, y: 0.22, r: 3.5, color: '#f0f5ff', glow: 'rgba(240, 245, 255, 0.4)' },
+        { id: 'gem1', x: 0.59, y: 0.33, r: 2.0, color: '#ffffff', glow: 'transparent' },
+        { id: 'gem2', x: 0.64, y: 0.44, r: 2.2, color: '#ffffff', glow: 'transparent' },
+        { id: 'gem3', x: 0.49, y: 0.36, r: 2.1, color: '#ffffff', glow: 'transparent' },
+        { id: 'gem4', x: 0.52, y: 0.48, r: 2.0, color: '#ffffff', glow: 'transparent' },
+
+        // BETELGEUSE (M-Class Crimson Supergiant in Orion)
+        { id: 'betelgeuse', name: 'Betelgeuse', x: 0.26, y: 0.46, r: 4.6, color: '#ff4d2e', glow: 'rgba(255, 77, 46, 0.65)', isSupergiant: true },
+
+        // SIRIUS (Blinding A-Class Diamond Beacon)
+        { id: 'sirius', name: 'Sirius', x: 0.34, y: 0.72, r: 5.8, color: '#d4ebff', glow: 'rgba(180, 220, 255, 0.8)', hasSpikes: true },
+
+        // PROCYON (F-Class Yellow-White in Canis Minor)
+        { id: 'procyon', name: 'Procyon', x: 0.45, y: 0.50, r: 4.0, color: '#fff1d6', glow: 'rgba(255, 241, 214, 0.4)' },
+
+        // ORION BELT COMPANIONS (Towards southwest horizon)
+        { id: 'rigel', name: 'Rigel', x: 0.18, y: 0.68, r: 4.2, color: '#cbe3ff', glow: 'rgba(203, 227, 255, 0.5)' },
+        { id: 'belt1', x: 0.22, y: 0.56, r: 2.2, color: '#eef3ff', glow: 'transparent' },
+        { id: 'belt2', x: 0.24, y: 0.57, r: 2.2, color: '#eef3ff', glow: 'transparent' },
+        { id: 'belt3', x: 0.26, y: 0.58, r: 2.2, color: '#eef3ff', glow: 'transparent' }
+    ];
+
+    // SCIENTIFIC CONSTELLATION FILAMENTS (Subtle, razor-thin lines)
+    const filaments = [
+        // Gemini
+        ['pollux', 'castor'],
+        ['castor', 'gem1'],
+        ['gem1', 'gem2'],
+        ['pollux', 'gem3'],
+        ['gem3', 'gem4'],
+        // Winter Triangle Vectors (Subtle red-tinted optical links)
+        ['betelgeuse', 'procyon'],
+        ['procyon', 'sirius'],
+        ['sirius', 'betelgeuse'],
+        // Orion side
+        ['betelgeuse', 'belt3'],
+        ['belt1', 'rigel']
+    ];
+
+    function drawSpike(cx, cy, length, width, color) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        // Vertical
+        ctx.moveTo(cx, cy - length);
+        ctx.lineTo(cx, cy + length);
+        // Horizontal
+        ctx.moveTo(cx - length, cy);
+        ctx.lineTo(cx + length, cy);
+        ctx.stroke();
+    }
+
+    let time = 0;
+    function render() {
+        time += 0.02;
+
+        // Smooth parallax dampening
+        offsetX += (targetX - offsetX) * 0.08;
+        offsetY += (targetY - offsetY) * 0.08;
+
+        ctx.clearRect(0, 0, width, height);
+
+        // A. RENDER VOLUMETRIC H-ALPHA NEBULA CLOUDS
+        nebulaClouds.forEach(cloud => {
+            const cx = (cloud.x * width) + (offsetX * 0.4);
+            const cy = (cloud.y * height) + (offsetY * 0.4);
+            const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, cloud.radius);
+            grad.addColorStop(0, cloud.color + cloud.alpha + ')');
+            grad.addColorStop(0.5, cloud.color + (cloud.alpha * 0.4) + ')');
+            grad.addColorStop(1, 'transparent');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, cloud.radius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // B. RENDER AMBIENT PINPRICK STARS WITH SUBTLE TWINKLE
+        bgStars.forEach(s => {
+            const sx = (s.x * width + offsetX * 0.7) % width;
+            const sy = (s.y * height + offsetY * 0.7) % height;
+            const actualX = sx < 0 ? sx + width : sx;
+            const actualY = sy < 0 ? sy + height : sy;
+
+            const twinkle = s.alpha + Math.sin(time * 2 + s.twinklePhase) * 0.18;
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0.1, twinkle)})`;
+            ctx.beginPath();
+            ctx.arc(actualX, actualY, s.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // C. RENDER CONSTELLATION FILAMENTS (Faint, high-precision astronomical lines)
+        ctx.strokeStyle = 'rgba(201, 24, 43, 0.3)';
+        ctx.lineWidth = 1;
+        filaments.forEach(([fromId, toId]) => {
+            const starA = keyStars.find(s => s.id === fromId);
+            const starB = keyStars.find(s => s.id === toId);
+            if (!starA || !starB) return;
+
+            const ax = starA.x * width + offsetX;
+            const ay = starA.y * height + offsetY;
+            const bx = starB.x * width + offsetX;
+            const by = starB.y * height + offsetY;
+
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.stroke();
+        });
+
+        // D. RENDER PRIMARY STELLAR TARGETS WITH TRUE SPECTRAL CHARACTERISTICS
+        keyStars.forEach(s => {
+            const sx = s.x * width + offsetX;
+            const sy = s.y * height + offsetY;
+
+            // 1. Ambient Halo / Corona
+            if (s.glow !== 'transparent') {
+                const glowRadius = s.r * (s.isSupergiant ? 5.5 : 4.0);
+                const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, glowRadius);
+                grad.addColorStop(0, s.glow);
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(sx, sy, glowRadius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 2. Optical Diffraction Spikes (Telescopic realism on brightest stars like Sirius & Betelgeuse)
+            if (s.hasSpikes) {
+                drawSpike(sx, sy, s.r * 5.5, 0.75, 'rgba(212, 235, 255, 0.7)');
+                drawSpike(sx, sy, s.r * 2.5, 1.5, 'rgba(255, 255, 255, 0.9)');
+            } else if (s.isSupergiant) {
+                drawSpike(sx, sy, s.r * 4.0, 0.75, 'rgba(255, 77, 46, 0.6)');
+            }
+
+            // 3. Dense Stellar Core
+            ctx.fillStyle = s.color;
+            ctx.beginPath();
+            ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 4. Pure White Hot Center
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(sx, sy, s.r * 0.45, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        requestAnimationFrame(render);
+    }
+
+    // INTERACTIVE PAN / TOUCH PARALLAX
+    function handlePointerDown(e) {
+        isDragging = true;
+        const pt = e.touches ? e.touches[0] : e;
+        startX = pt.clientX;
+        startY = pt.clientY;
+    }
+
+    function handlePointerMove(e) {
+        if (!isDragging) return;
+        const pt = e.touches ? e.touches[0] : e;
+        const dx = (pt.clientX - startX) * 0.35;
+        const dy = (pt.clientY - startY) * 0.35;
+        targetX = Math.max(-40, Math.min(40, targetX + dx));
+        targetY = Math.max(-40, Math.min(40, targetY + dy));
+        startX = pt.clientX;
+        startY = pt.clientY;
+        if (e.cancelable) e.preventDefault();
+    }
+
+    function handlePointerUp() {
+        isDragging = false;
+    }
+
+    canvas.addEventListener('mousedown', handlePointerDown);
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseup', handlePointerUp);
+
+    canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+    window.addEventListener('touchmove', handlePointerMove, { passive: false });
+    window.addEventListener('touchend', handlePointerUp);
+
+    // Initial setup
+    resize();
+    render();
+</script>
+</body>
+</html>
