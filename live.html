@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>un bécot.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #030406;
+            --crimson-glow: rgba(214, 52, 71, 0.45);
+            --steel-text: #5e6675;
+            --white-pure: #ffffff;
+            --crimson-core: #ff2a43;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            background-image: 
+                radial-gradient(circle at 50% 50%, #08090d 0%, #020203 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--white-pure);
+            overflow: hidden;
+            padding: 20px 10px;
+        }
+
+        /* 100% Round & Centered Clock Outer Rim */
+        .clock-frame {
+            position: relative;
+            width: 86vw;
+            max-width: 380px;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            background: radial-gradient(circle, #0e1117 60%, #040507 100%);
+            border: 4px solid #141720;
+            box-shadow: 
+                0 0 60px rgba(0, 0, 0, 0.9),
+                0 0 25px rgba(255, 42, 67, 0.08),
+                inset 0 0 20px rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas for Hands & EKG Heartbeat */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        /* Fully Circular HUD Face Labels */
+        .clock-hud {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 45px 0 35px;
+            z-index: 2;
+        }
+
+        /* Top Panel Milestone (un bécot.) */
+        .milestone-group {
+            text-align: center;
+        }
+
+        .year-stamp {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--crimson-core);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .epoch-signature {
+            font-size: 0.65rem;
+            letter-spacing: 2.5px;
+            color: var(--steel-text);
+            margin-top: 1px;
+            text-transform: lowercase;
+        }
+
+        .digital-time {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        /* Micro Circular Sub-dials (no needles) */
+        .subdial {
+            position: absolute;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: rgba(8, 10, 14, 0.92);
+            border: 1px solid rgba(255, 42, 67, 0.12);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+        }
+
+        .sub-tag {
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            color: var(--steel-text);
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .sub-val {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--crimson-core);
+        }
+
+        /* Left side sub-dial: S 3 */
+        .subdial-left {
+            left: 18%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Right side sub-dial: A 15 */
+        .subdial-right {
+            right: 18%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Bottom HUD Details: Galactic displacement & EKG positioning space */
+        .bottom-metadata {
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.42rem;
+            letter-spacing: 1.2px;
+            color: var(--steel-text);
+            z-index: 10;
+            position: absolute;
+            bottom: 30px;
+        }
+
+        .instructions {
+            margin-top: 35px;
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            color: var(--steel-text);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-frame">
+        <canvas id="liveClockCanvas"></canvas>
+
+        <!-- Dynamic Dashboard Sub-Dials (No needle pointer) -->
+        <div class="subdial subdial-left">
+            <span class="sub-tag">S</span>
+            <span class="sub-val">3</span>
+        </div>
+
+        <div class="subdial subdial-right">
+            <span class="sub-tag">A</span>
+            <span class="sub-val">15</span>
+        </div>
+
+        <!-- System Typographical HUD -->
+        <div class="clock-hud">
+            <div class="milestone-group">
+                <div class="year-stamp">2024</div>
+                <div class="epoch-signature">un bécot.</div>
+                <div class="digital-time">22:02</div>
+            </div>
+        </div>
+
+        <!-- Micro displacement metric -->
+        <div class="bottom-metadata">
+            2,662,848,000 KM // 134D TRANSIT
+        </div>
+    </div>
+
+    <div class="instructions">Dynamic Telemetry • Heartbeat Active</div>
+
+<script>
+    const canvas = document.getElementById('liveClockCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Smooth mechanical variables
+    let sweepAngle = 0;
+    let heartTime = 0;
+
+    function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * DPR();
+        canvas.height = rect.height * DPR();
+        ctx.scale(DPR(), DPR());
+    }
+
+    function DPR() { return window.devicePixelRatio || 1; }
+
+    window.addEventListener('resize', resize);
+
+    function drawTelemetry() {
+        const rect = canvas.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const radius = w / 2;
+
+        ctx.clearRect(0, w, h, w); // Clean viewport
+
+        // 1. Minute ticking & visual border tracks
+        for (let i = 0; i < 60; i++) {
+            const angle = (i * 6) * (Math.PI / 180);
+            const isMajor = i % 5 === 0;
+            const innerLength = radius - (isMajor ? 12 : 6);
+            const outerLength = radius - 2;
+
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(angle) * innerLength, cy + Math.sin(angle) * innerLength);
+            ctx.lineTo(cx + Math.cos(angle) * outerLength, cy + Math.sin(angle) * outerLength);
+            ctx.strokeStyle = isMajor ? 'rgba(255, 42, 67, 0.4)' : 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = isMajor ? 1.5 : 1;
+            ctx.stroke();
+        }
+
+        // 2. Fixed Target Hands (The milestone: 22:02)
+        // Hour hand pointing at 10 (22:00)
+        const hourAngle = (10 * 30 + 2 * 0.5 - 90) * (Math.PI / 180);
+        drawCustomHand(cx, cy, hourAngle, radius * 0.45, 5, 'rgba(255,255,255,0.7)', 'rgba(255, 42, 67, 0.8)');
+
+        // Minute hand pointing at 2 minutes (02)
+        const minAngle = (2 * 6 - 90) * (Math.PI / 180);
+        drawCustomHand(cx, cy, minAngle, radius * 0.72, 3, '#ffffff', 'rgba(255, 42, 67, 0.9)');
+
+        // 3. EKG Pulse Heartbeat sweep (Lower Third horizontal tracking)
+        ctx.save();
+        ctx.beginPath();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#ff2a43';
+        ctx.shadowColor = 'rgba(255, 42, 67, 0.6)';
+        ctx.shadowBlur = 10;
+
+        const pulseY = cy + radius * 0.48; // Lower alignment space
+        const leftBoundary = cx - radius * 0.75;
+        const rightBoundary = cx + radius * 0.75;
+        const totalDistance = rightBoundary - leftBoundary;
+
+        heartTime += 0.035;
+
+        for (let px = leftBoundary; px <= rightBoundary; px++) {
+            let offset = (px - leftBoundary) / totalDistance;
+            let cycle = (offset * 3 - heartTime) % Math.PI;
+            if (cycle < 0) cycle += Math.PI;
+
+            let amp = 0;
+            // Draw a realistic natural systolic peak / spike heartbeat configuration
+            if (cycle > 0.8 && cycle < 1.0) {
+                const innerT = (cycle - 0.8) / 0.2;
+                amp = Math.sin(innerT * Math.PI) * 14; 
+            } else if (cycle >= 1.0 && cycle < 1.2) {
+                const innerT = (cycle - 1.0) / 0.2;
+                amp = -Math.sin(innerT * Math.PI) * 28; // Systolic drop
+            } else if (cycle >= 1.2 && cycle < 1.4) {
+                const innerT = (cycle - 1.2) / 0.2;
+                amp = Math.sin(innerT * Math.PI) * 6; // Recover
+            }
+
+            if (px === leftBoundary) {
+                ctx.moveTo(px, pulseY + amp);
+            } else {
+                ctx.lineTo(px, pulseY + amp);
+            }
+        }
+        ctx.stroke();
+        ctx.restore();
+
+        // 4. Smooth sweeping Second Hand (Continuous tracking)
+        sweepAngle += 0.02; // Change visual rate
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx - Math.cos(sweepAngle) * 18, cy - Math.sin(sweepAngle) * 18);
+        ctx.lineTo(cx + Math.cos(sweepAngle) * (radius - 12), cy + Math.sin(sweepAngle) * (radius - 12));
+        ctx.strokeStyle = '#ff2a43';
+        ctx.lineWidth = 1.2;
+        ctx.shadowColor = 'rgba(255, 42, 67, 0.4)';
+        ctx.shadowBlur = 4;
+        ctx.stroke();
+
+        // Pinion point dot cap
+        ctx.beginPath();
+        ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#06080c';
+        ctx.fill();
+        ctx.strokeStyle = '#ff2a43';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+        ctx.restore();
+
+        requestAnimationFrame(drawTelemetry);
+    }
+
+    function drawCustomHand(cx, cy, angle, length, width, outlineColor, interiorLume) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        const tx = cx + Math.cos(angle) * length;
+        const ty = cy + Math.sin(angle) * length;
+        ctx.lineTo(tx, ty);
+        ctx.strokeStyle = outlineColor;
+        ctx.lineWidth = width;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Bright interior stripe track
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * 10, cy + Math.sin(angle) * 10);
+        ctx.lineTo(tx - Math.cos(angle) * 3, ty - Math.sin(angle) * 3);
+        ctx.strokeStyle = interiorLume;
+        ctx.lineWidth = width * 0.4;
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    resize();
+    requestAnimationFrame(drawTelemetry);
+</script>
+</body>
+</html>
